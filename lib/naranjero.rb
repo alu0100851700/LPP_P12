@@ -14,31 +14,6 @@ class Naranjero
         @produccion = 0
         @vivo = true
         
-        @arbol = Thread.new do
-            while @vivo  #Mientras este vivo sigue creciendo
-                puts uno_mas
-                @i = 5          #Cuanto le queda para crecer al arbol
-                while @i > 0
-                    sleep 1   
-                    @i -= 1
-                end
-            end
-        end
-        
-        @recolector = Thread.new do
-            while @vivo  #Mientras este vivo sigue creciendo
-                rec = recolectar_una
-                puts rec
-                if rec == "No quedan naranjas, lo siento."  #El proceso se duerme hasta que el arbol acabe de crecer
-                    puts "El recolector va a descansar #{@i}"
-                    sleep @i
-                else
-                    sleep 0.1
-                end
-            end
-            puts recolectar_una
-        end
-        
     end
     
     def uno_mas #grow
@@ -85,10 +60,37 @@ end
 if __FILE__ == $0
    n = Naranjero.new
    
+   Thread.new do
+            while n.vivo  #Mientras este vivo sigue creciendo
+                puts n.uno_mas
+                @i = 5          #Cuanto le queda para crecer al arbol
+                while @i > 0
+                    sleep 1   
+                    @i -= 1
+                end
+            end
+        end
+        
+    Thread.new do
+            while n.vivo  #Mientras este vivo sigue creciendo
+                rec = n.recolectar_una
+                puts rec
+                if rec == "No quedan naranjas, lo siento."  #El proceso se duerme hasta que el arbol acabe de crecer
+                    puts "El recolector va a descansar #{@i}"
+                    sleep @i
+                else
+                    sleep 0.1
+                end
+            end
+            puts n.recolectar_una
+    end
+   
+   ####### Para que no se salga del programa #######
    result=[]
     while input = gets do
       input.split(' ').each do |value|
         result << value.chomp
       end
     end
+    ####### ******************************** #######
 end
